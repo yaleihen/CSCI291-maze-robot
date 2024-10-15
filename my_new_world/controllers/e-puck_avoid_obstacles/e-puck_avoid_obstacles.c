@@ -20,8 +20,8 @@ int main(int argc, char **argv) {
   WbDeviceTag right_motor = wb_robot_get_device("right wheel motor");
  
   // set the target position of the mo9tors
-  wb_motor_set_position(left_motor, 10);
-  wb_motor_set_position(right_motor, -10);
+  wb_motor_set_position(left_motor, 3.14);
+  wb_motor_set_position(right_motor, -3.14);
   
   // Main loop
   while (wb_robot_step(TIME_STEP) != -1) {
