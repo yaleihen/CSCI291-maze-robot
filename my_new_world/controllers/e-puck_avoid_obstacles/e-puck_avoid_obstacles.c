@@ -9,8 +9,16 @@
 int main(int argc, char **argv) {
   // Initialize the Webots API
   wb_robot_init();
+  
+   // get the motor devices
+ WbDeviceTag left_motor = wb_robot_get_device("left wheel motor");
+ WbDeviceTag right_motor = wb_robot_get_device("right wheel motor");
+ // set the target position of the motors
+ wb_motor_set_position(left_motor, 10.0);
+ wb_motor_set_position(right_motor, 10.0);
 
   // Define and enable the light sensor (lts)
+<<<<<<< HEAD
   WbDeviceTag light_sensor = wb_robot_get_device("light sensor");  // Replace "lts" with the actual name of the light sensor
   wb_light_sensor_enable(light_sensor, TIME_STEP);
   
@@ -23,6 +31,11 @@ int main(int argc, char **argv) {
   wb_motor_set_position(left_motor, 3.14);
   wb_motor_set_position(right_motor, -3.14);
   
+=======
+ WbDeviceTag light_sensor = wb_robot_get_device("light sensor");  // Replace "lts" with the actual name of the light sensor
+ wb_light_sensor_enable(light_sensor, TIME_STEP);
+
+>>>>>>> 02d69d5eafb5d4e1e5019264f35a8fae7796386b
   // Main loop
   while (wb_robot_step(TIME_STEP) != -1) {
     // Read the light sensor value
