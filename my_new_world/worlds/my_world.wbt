@@ -25,6 +25,7 @@ RectangleArena {
   }
 }
 E-puck {
+  controller "e-puck_avoid_obstacles_ahmed_test"
   turretSlot [
     LightSensor {
     }
