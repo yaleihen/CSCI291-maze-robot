@@ -10,7 +10,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.6214617141096856 -0.5913430951402532 -0.5139053236986332 4.125083305344911
-  position -1.1541373487193503 0.3167829372018672 2.892216275016235
+  position -1.281178180285775 0.5153639316140377 2.202827476031918
 }
 TexturedBackground {
 }
@@ -25,7 +25,7 @@ RectangleArena {
   }
 }
 E-puck {
-  translation -1.11 0.06 0
+  translation -1.42 0.35 0
   controller "e-puck_avoid_obstacles_ahmed_test"
   turretSlot [
     LightSensor {
