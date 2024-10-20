@@ -1,0 +1,129 @@
+/*
+ * File:          e-puck_maze_main.c
+ * Date:
+ * Description:
+ * Author:
+ * Modifications:
+ */
+
+/*
+ * You may need to add include files like <webots/distance_sensor.h> or
+ * <webots/motor.h>, etc.
+ */
+#include <webots/robot.h>
+#include <webots/motor.h>
+#include <webots/distance_sensor.h>
+#include <stdio.h>
+/*
+ * You may want to add macros here.
+ */
+
+#define TIME_STEP 64
+#define MAX_SPEED 6.28
+#define WALL_THRESHOLD 80 // The distance e-puck ideally maintains from walls
+
+/*
+ * This is the main program.
+ * The arguments of the main function can be specified by the
+ * "controllerArgs" field of the Robot node
+ */
+int main(int argc, char **argv) {
+  /* necessary to initialize webots stuff */
+  wb_robot_init();
+
+  /*
+   * You should declare here WbDeviceTag variables for storing
+   * robot devices like this:
+   *  WbDeviceTag my_sensor = wb_robot_get_device("my_sensor");
+   *  WbDeviceTag my_actuator = wb_robot_get_device("my_actuator");
+   */
+   
+  // Assign tags to the motors
+  WbDeviceTag left_motor = wb_robot_get_device("left wheel motor");
+  WbDeviceTag right_motor = wb_robot_get_device("right wheel motor");
+  
+  // Set position target and initial velocity (0)
+  wb_motor_set_velocity(left_motor, 0.0);
+  wb_motor_set_velocity(right_motor, 0.0);
+  wb_motor_set_position(left_motor, INFINITY);
+  wb_motor_set_position(right_motor, INFINITY);
+  
+  // Assign each proximity sensor tag to an array
+  WbDeviceTag ps_sensors[8];
+  char ps_sensors_tags[8]; // const array to prevent accidental change
+  for (int i = 0; i < 8; i++){
+    // Sourced from the sample read_distances controller
+    sprintf(ps_sensors_tags, "ps%d", i);
+    ps_sensors[i] = wb_robot_get_device(ps_sensors_tags);
+    wb_distance_sensor_enable(ps_sensors[i], TIME_STEP);
+    }
+    
+  double left_speed = MAX_SPEED;
+  double right_speed = MAX_SPEED;
+  /* main loop
+   * Perform simulation steps of TIME_STEP milliseconds
+   * and leave the loop when the simulation is over
+   */
+  while (wb_robot_step(TIME_STEP) != -1) {
+    /*
+     * Read the sensors :
+     * Enter here functions to read sensor data, like:
+     *  double val = wb_distance_sensor_get_value(my_sensor);
+     */
+     
+     /* 
+      * Ideally, the e-puck navigates the maze by continously 
+      * taking a left while maintaining a distance of 80 units
+      * from each wall. IR sensors 5, 6, 7 are used. If they
+      * read distances more than the globally defined wall 
+      * threshold ,the following booleans should be "true" 
+      * meaning a left wall, corner or front wall is detected. 
+      */
+      
+     bool left_wall = wb_distance_sensor_get_value(ps_sensors[5]) > WALL_THRESHOLD;
+     bool left_corner = wb_distance_sensor_get_value(ps_sensors[6]) > WALL_THRESHOLD;
+     bool front_wall = wb_distance_sensor_get_value(ps_sensors[7]) > WALL_THRESHOLD;
+     
+    /* Process sensor data here */
+    
+    // if front wall detected, drive right
+    if (front_wall == true){
+      left_speed = MAX_SPEED;
+      right_speed = -MAX_SPEED;
+    }
+    
+    // if left wall detected, drive straight
+    if (left_wall == true){
+      left_speed = MAX_SPEED;
+      right_speed = MAX_SPEED;
+    }
+    
+    // no wall detected, take left
+    else{
+      left_speed = MAX_SPEED/8;
+      right_speed = MAX_SPEED/2;
+    }
+    
+    // don't get too close to walls
+    if (left_corner == true){
+      left_speed = MAX_SPEED;
+      right_speed = MAX_SPEED/8;
+    }
+    
+    /*
+     * Enter here functions to send actuator commands, like:
+     * wb_motor_set_position(my_actuator, 10.0);
+     */
+     
+     wb_motor_set_velocity(left_motor, left_speed);
+     wb_motor_set_velocity(right_motor, right_speed);
+     
+  };
+
+  /* Enter your cleanup code here */
+
+  /* This is necessary to cleanup webots resources */
+  wb_robot_cleanup();
+
+  return 0;
+}

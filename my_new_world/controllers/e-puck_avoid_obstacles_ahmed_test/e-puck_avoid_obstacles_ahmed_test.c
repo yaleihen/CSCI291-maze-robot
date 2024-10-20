@@ -7,9 +7,9 @@
 #define MAX_SPEED 6.28
 
 // Thresholds for earlier wall detection. Requires Tweaking for better navigation
-#define WALL_THRESHOLD 100.0    // For right or left walls
-#define TURN_THRESHOLD 150.0    // For front walls
-#define CRITICAL_DISTANCE 200.0 // For very close walls
+#define WALL_THRESHOLD 150.0    // For right or left walls
+#define TURN_THRESHOLD 200.0    // For front walls
+#define CRITICAL_DISTANCE 250.0 // For very close walls
 
 // Function Prototypes
 void move(double left_speed, double right_speed);
