@@ -20,7 +20,9 @@
 
 #define TIME_STEP 64
 #define MAX_SPEED 6.28
-#define WALL_THRESHOLD 80 // The distance e-puck ideally maintains from walls
+
+// The distance e-puck ideally maintains from walls
+#define WALL_THRESHOLD 80
 
 /*
  * This is the main program.
@@ -50,7 +52,7 @@ int main(int argc, char **argv) {
   
   // Assign each proximity sensor tag to an array
   WbDeviceTag ps_sensors[8];
-  char ps_sensors_tags[8]; // const array to prevent accidental change
+  char ps_sensors_tags[8]; 
   for (int i = 0; i < 8; i++){
     // Sourced from the sample read_distances controller
     sprintf(ps_sensors_tags, "ps%d", i);
@@ -60,6 +62,7 @@ int main(int argc, char **argv) {
     
   double left_speed = MAX_SPEED;
   double right_speed = MAX_SPEED;
+
   /* main loop
    * Perform simulation steps of TIME_STEP milliseconds
    * and leave the loop when the simulation is over
@@ -101,12 +104,12 @@ int main(int argc, char **argv) {
     // no wall detected, take left
     else{
       left_speed = MAX_SPEED/8;
-      right_speed = MAX_SPEED/2;
+      right_speed = MAX_SPEED;
     }
     
     // don't get too close to walls
     if (left_corner == true){
-      left_speed = MAX_SPEED;
+      left_speed = MAX_SPEED/2;
       right_speed = MAX_SPEED/8;
     }
     
