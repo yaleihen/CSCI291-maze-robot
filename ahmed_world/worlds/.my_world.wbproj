@@ -6,7 +6,7 @@ minimizedPerspectives: 000000ff00000000fd0000000300000000000001ca0000039ffc02000
 maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
-textFiles: 0 "../my_new_world/controllers/e-puck_avoid_obstacles/e-puck_light_sensor_ahmed_test.c"
+textFiles: 0 "controllers/e-puck_light_sensor/e-puck_light_sensor.c"
 globalOptionalRendering: DistanceSensorRays::LightPositions::LightSensorRays
 consoles: Console:All:All
 renderingDevicePerspectives: e-puck:camera;1;1;0;0
