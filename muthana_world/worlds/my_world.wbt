@@ -10,7 +10,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.6198090039997127 -0.5948968989214743 -0.5117953479805157 4.131289673778244
-  position -0.42933581975953483 0.35551547095601876 4.119036932490481
+  position -1.149254858970456 0.23792295055606655 1.2565563013836105
 }
 TexturedBackground {
 }
@@ -27,7 +27,7 @@ RectangleArena {
 E-puck {
   translation -1.10507 0.0718566 0
   rotation 0 0 1 1.5708
-  controller "e-puck_maze_main"
+  controller "e-puck_collision"
   turretSlot [
     LightSensor {
     }

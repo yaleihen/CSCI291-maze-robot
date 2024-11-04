@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
     // Read and display the values from the 8 light sensors
     for (int i = 0; i < 8; i++) {
       double light_value = wb_light_sensor_get_value(light_sensors[i]);
-      //printf("Light Sensor %d Value: %f\n", i, light_value);
+      printf("Light Sensor %d Value: %f\n", i, light_value);
       sum += light_value;
     }
     printf("\n");  // Add a newline for better readability

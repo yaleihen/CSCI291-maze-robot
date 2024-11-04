@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
   while (wb_robot_step(TIME_STEP) != -1) {
     // Read the light sensor value
     double light_value = wb_light_sensor_get_value(light_sensor);
+    bool turn90ccw();   // Turn robot 90 degrees ccw in place
 
     // Display the value
     printf("Light Sensor Value: %f\n", light_value);

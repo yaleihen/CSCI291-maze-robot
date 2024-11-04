@@ -13,7 +13,9 @@
 #include <webots/robot.h>
 #include <webots/motor.h>
 #include <webots/distance_sensor.h>
+#include <webots/light_sensor.h>
 #include <stdio.h>
+
 /*
  * You may want to add macros here.
  */
@@ -23,6 +25,10 @@
 
 // The distance e-puck ideally maintains from walls
 #define WALL_THRESHOLD 80
+
+// Values for sum and avg of light intensity detected by light sensors
+float avg= 0;
+float sum = 0;
 
 /*
  * This is the main program.
@@ -43,6 +49,19 @@ int main(int argc, char **argv) {
   // Assign tags to the motors
   WbDeviceTag left_motor = wb_robot_get_device("left wheel motor");
   WbDeviceTag right_motor = wb_robot_get_device("right wheel motor");
+  // Define the names of the 8 built-in light sensors
+  const char *light_sensors_names[8] = {
+    "ls0", "ls1", "ls2", "ls3", "ls4", "ls5", "ls6", "ls7"
+  };
+  
+  WbDeviceTag light_sensors[8];
+  
+  // Enable light sensors
+  for (int i = 0; i < 8; i++) {
+    light_sensors[i] = wb_robot_get_device(light_sensors_names[i]);
+    wb_light_sensor_enable(light_sensors[i], TIME_STEP);
+  }
+
   
   // Set position target and initial velocity (0)
   wb_motor_set_velocity(left_motor, 0.0);
@@ -60,6 +79,11 @@ int main(int argc, char **argv) {
     wb_distance_sensor_enable(ps_sensors[i], TIME_STEP);
     }
     
+    for (int j = 0; j < 8; j++){
+    double light_value = wb_light_sensor_get_value(light_sensors[j]);
+      printf("Light Sensor %d Value: %f\n", j, light_value);
+      sum += light_value;
+    }
   double left_speed = MAX_SPEED;
   double right_speed = MAX_SPEED;
 
@@ -82,7 +106,17 @@ int main(int argc, char **argv) {
       * threshold ,the following booleans should be "true" 
       * meaning a left wall, corner or front wall is detected. 
       */
+    for (int j = 0; j < 8; j++){
+    double light_value = wb_light_sensor_get_value(light_sensors[j]);
+      printf("Light Sensor %d Value: %f\n", j, light_value);
+      sum += light_value;
+    }  
+    printf("\n");  // Add a newline for better readability
+    avg = sum/8.0;
+    printf("Average light is %lf\n", avg);
+    
       
+     sum = 0;
      bool left_wall = wb_distance_sensor_get_value(ps_sensors[5]) > WALL_THRESHOLD;
      bool left_corner = wb_distance_sensor_get_value(ps_sensors[6]) > WALL_THRESHOLD;
      bool front_wall = wb_distance_sensor_get_value(ps_sensors[7]) > WALL_THRESHOLD;
@@ -102,14 +136,14 @@ int main(int argc, char **argv) {
     }
     
     // no wall detected, take left
-    else{
+    else {
       left_speed = MAX_SPEED/8;
       right_speed = MAX_SPEED;
     }
     
     // don't get too close to walls
     if (left_corner == true){
-      left_speed = MAX_SPEED/2;
+      left_speed = MAX_SPEED/1.8;
       right_speed = MAX_SPEED/8;
     }
     
