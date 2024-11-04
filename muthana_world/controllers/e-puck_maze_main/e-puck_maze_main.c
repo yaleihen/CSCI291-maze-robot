@@ -25,10 +25,13 @@
 
 // The distance e-puck ideally maintains from walls
 #define WALL_THRESHOLD 80
+#define STATION_RIGHT_WALL 120
+#define STATION_FRONT_WALL 120
 
 // Values for sum and avg of light intensity detected by light sensors
 float avg= 0;
 float sum = 0;
+int station = 1;
 
 /*
  * This is the main program.
@@ -79,11 +82,6 @@ int main(int argc, char **argv) {
     wb_distance_sensor_enable(ps_sensors[i], TIME_STEP);
     }
     
-    for (int j = 0; j < 8; j++){
-    double light_value = wb_light_sensor_get_value(light_sensors[j]);
-      printf("Light Sensor %d Value: %f\n", j, light_value);
-      sum += light_value;
-    }
   double left_speed = MAX_SPEED;
   double right_speed = MAX_SPEED;
 
@@ -106,17 +104,9 @@ int main(int argc, char **argv) {
       * threshold ,the following booleans should be "true" 
       * meaning a left wall, corner or front wall is detected. 
       */
-    for (int j = 0; j < 8; j++){
-    double light_value = wb_light_sensor_get_value(light_sensors[j]);
-      printf("Light Sensor %d Value: %f\n", j, light_value);
-      sum += light_value;
-    }  
-    printf("\n");  // Add a newline for better readability
-    avg = sum/8.0;
-    printf("Average light is %lf\n", avg);
     
-      
-     sum = 0;
+     bool station_front_wall = wb_distance_sensor_get_value(ps_sensors[7]) > STATION_FRONT_WALL;     
+     bool right_wall = wb_distance_sensor_get_value(ps_sensors[2]) > STATION_RIGHT_WALL;
      bool left_wall = wb_distance_sensor_get_value(ps_sensors[5]) > WALL_THRESHOLD;
      bool left_corner = wb_distance_sensor_get_value(ps_sensors[6]) > WALL_THRESHOLD;
      bool front_wall = wb_distance_sensor_get_value(ps_sensors[7]) > WALL_THRESHOLD;
@@ -145,6 +135,30 @@ int main(int argc, char **argv) {
     if (left_corner == true){
       left_speed = MAX_SPEED/1.8;
       right_speed = MAX_SPEED/8;
+    }
+    
+    /* 
+     * detect average light in a dead end / "station"
+     * current bugs:-
+     * doesn't detect all stations (maybe threshold tuning necessary)
+     * calculates average multiple times, should be only once
+     * (necessary to re-program boolean conditions to set "true"
+     * for walls only if proximity sensors are == to
+     * "WALL_THRESHOLD" instead of > which means if loop
+     * is executed multiple times.
+     */
+    
+    if (right_wall == true && left_wall == true && station_front_wall == true){
+    sum = 0;
+    for (int j = 0; j < 8; j++){
+    double light_value = wb_light_sensor_get_value(light_sensors[j]);
+      // (debug) printf("Light Sensor %d Value: %f\n", j, light_value);
+      sum += light_value;
+      }  
+    printf("\n");
+    avg = sum/8.0;
+    printf("Station %d Average light is %lf\n", station, avg);
+    station++;
     }
     
     /*
