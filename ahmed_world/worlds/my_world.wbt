@@ -26,7 +26,7 @@ RectangleArena {
 }
 E-puck {
   translation -1.42 0.35 0
-  controller "e-puck_avoid_obstacles_ahmed_test"
+  controller "e-puck_light_sensor"
   turretSlot [
     LightSensor {
     }
