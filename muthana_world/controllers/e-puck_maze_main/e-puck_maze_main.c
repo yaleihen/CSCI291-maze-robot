@@ -1,4 +1,10 @@
 /*
+ * TODO: boolean for dead end, if true, delay
+ * measure wall distance from tight dead-end
+ */
+
+
+/*
  * File:          e-puck_maze_main.c
  * Date:
  * Description:
@@ -25,8 +31,8 @@
 
 // The distance e-puck ideally maintains from walls
 #define WALL_THRESHOLD 80
-#define STATION_RIGHT_WALL 120
-#define STATION_FRONT_WALL 120
+#define STATION_RIGHT_WALL 60
+#define STATION_FRONT_WALL 60
 
 // Values for sum and avg of light intensity detected by light sensors
 float avg= 0;
@@ -104,7 +110,7 @@ int main(int argc, char **argv) {
       * threshold ,the following booleans should be "true" 
       * meaning a left wall, corner or front wall is detected. 
       */
-    
+     // dead_end
      bool station_front_wall = wb_distance_sensor_get_value(ps_sensors[7]) > STATION_FRONT_WALL;     
      bool right_wall = wb_distance_sensor_get_value(ps_sensors[2]) > STATION_RIGHT_WALL;
      bool left_wall = wb_distance_sensor_get_value(ps_sensors[5]) > WALL_THRESHOLD;
@@ -142,10 +148,7 @@ int main(int argc, char **argv) {
      * current bugs:-
      * doesn't detect all stations (maybe threshold tuning necessary)
      * calculates average multiple times, should be only once
-     * (necessary to re-program boolean conditions to set "true"
-     * for walls only if proximity sensors are == to
-     * "WALL_THRESHOLD" instead of > which means if loop
-     * is executed multiple times.
+     * (look into "delay" e-puck function).
      */
     
     if (right_wall == true && left_wall == true && station_front_wall == true){
